@@ -1,0 +1,1 @@
+write.csv(Sample.T1.1.delivery, file = "C:/Users/Bao/Desktop/T1.Unique.Delivery.csv", row.names = FALSE)
