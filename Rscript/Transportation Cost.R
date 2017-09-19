@@ -13,9 +13,16 @@ library(stringr)
 #Add lubridate
 library(lubridate)
 
+
+#great the working path
+
+setwd("D:/Goolge Drive/FOBRA/02. Project Documents/04. Data Analysis/Analysis BAO/Data/Master Data/") #company
+
+setwd("D:/Google Drive/FOBRA/02. Project Documents/04. Data Analysis/Analysis BAO/Data/Master Data/") #home
+
 # Adding the CSV file: DPA___Relatório_de_Tarifa-br
 
-df.cost.transportation <- read_csv("D:/Google Drive/FOBRA/02. Project Documents/04. Data Analysis/Analysis BAO/Data/Master Data/Temp.Transport.cost.csv") %>%
+df.cost.transportation <- read_csv("RouteCost.csv") 
 
 # Create the matching reference later to use. Following the structure
 # Origin Code (1208) 

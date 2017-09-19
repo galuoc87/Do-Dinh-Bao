@@ -12,24 +12,49 @@ library(stringr)
 
 # import the CSV file of Transporation (without the detail SKUs)- converted by Matthieu
 
-df.transportation <- read_csv("D:\\Goolge Drive\\FOBRA\\02. Project Documents\\04. Data Analysis\\Analysis BAO\\Data\\DPA_Transport-db-fy17_V01_17Aug2017_MAT.csv",skip=1)
+df.destination <- read_csv("D:\\Goolge Drive\\FOBRA\\02. Project Documents\\04. Data Analysis\\Analysis BAO\\Data\\transportation.FY2017.unique.del_V03.csv")
 
+# used Youssef verison as the reference
+# (remove)Add the pallet and CBM to the cleansed Transportation Data
 
+#df.transportation <- df.transportation %>%
+ # mutate(Chave.CUSTLIST = str_c(Fiscal.Unit,Dest.Code,sep = ".")) %>%
+  #left_join(Sum.Ship.Order)
+  
+  
+  
+  #df.transportation <- df.transportation %>%
+  #group_by(Shipment.Document) %>%
+  #mutate(Total.frieght = sum(actual.Net.freight.cost),
+  #       Occurance = n()
+   #      )
+  
+df.success.transportation <- df.transportation %>%
+  group_by(Shipment.Document)%>%
+  arrange(Shipment.Document) %>%
+  mutate(Totalfrieghtcost = sum(actual.Net.freight.cost),
+         Occurance = n(),
+         Rank = row_number()
+  ) %>%
+  filter(!(is.na(actual.pallet) | Totalfrieghtcost <= 0))
+  #write.csv(df.success.transportation, file = "C:/Users/Bao/Desktop/DPA_Raw.Transport.csv", row.names = FALSE)
+  #write.csv(df.transportation, file = "C:/Users/Bao/Desktop/DPA_Physical Delivery.csv", row.names = FALSE)
+  
 # Create the summary table started from Customer Type > Document type > Shipment Type > Cost Category > Destination > Vehicle Typewith the sum of cost and weight
 # toghether the count of time
 # Remember to add the name for each columns
 
 Summary.transport <- df.transportation %>%
   
-  group_by(Customer.type = df.transportation$`T1.T2`,
-           Shipment.Order = df.transportation$`Documento.de.Custo`,
-           Shipment.type = df.transportation$`Shipment.type`,
-           Cost.Category = df.transportation$`Cost.category`,
-           Destination.sap = df.transportation$`Dest.City (SAP)`,
-           Vehicle.type = df.transportation$Vehicle.SAP.code) %>%
+  group_by(Customer.type = T1.T2.x,
+           Shipment.Order = Shipment.Document,
+           Shipment.type = Shipment.type,
+           Cost.Category = Cost.category,
+           Destination.sap = Dest.City..SAP.,
+           Vehicle.type = Vehicle.SAP.code) %>%
 
-  summarise(Total.Freight.Cost=sum(Net.freight.cost,na.rm=TRUE)
-            ,Total.weight=sum(Gross.weight.Kg,na.rm=TRUE)
+  summarise(Total.Freight.Cost=sum(actual.Net.freight.cost,na.rm=TRUE)
+            ,Total.weight=sum(actual.Gross.weight.Kg,na.rm=TRUE)
             ,Num.of.occurrent=(n()))
 
 
@@ -71,7 +96,7 @@ Shipment.avai.T1 <- tibble(
 # Create the new data with filtering from Shipment Avalibale size.
 
 df.trans.forT1 <- df.transportation %>%
-  left_join(Shipment.avai.T1,c("Documento.de.Custo" = "Unique.order")) %>%
+  left_join(Shipment.avai.T1,c("Shipment.Document" = "Unique.order")) %>%
   
   # then filter the column Check.avai
   

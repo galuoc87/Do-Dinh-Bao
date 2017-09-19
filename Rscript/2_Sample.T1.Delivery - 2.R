@@ -51,7 +51,7 @@ filter(
   Dest.City..SAP. != "Rio de Janeiro",
   !Dest.State %in% c("AM","RO","RR","AP","AC","PA"),
   Cost.category=="Transporte",
-  Fiscal.Unit=="4744") %>% #Garanhus DC
+  Fiscal.Unit=="7032") %>% #Araras DC
   
   #Vehicle.SAP.code=="BR024")%>%
   
@@ -98,7 +98,3 @@ filter(
     # Calculate the suit transportation Cost.
     mutate(Suit_trans.cost=df.cost.transportation$TARIFA.FRETE[match(Suit.Lookup.trans,df.cost.transportation$Look.Up)])
   
-
-Check.erro.Rodo = Sample.T1.1.Delivery %>%
-  filter(is.na(Current.trans.cost))
-write.csv(Check.erro.Rodo, file = "C:/Users/Bao/Desktop/errorRodo.csv", row.names = FALSE)
